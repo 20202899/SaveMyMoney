@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="br.com.subsavecoins.savemymoney.activities.DetailActivity"
+    tools:showIn="@layout/activity_detail">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_gravity="top|end"
+            android:id="@+id/price_layout"
+            android:elevation="6dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_offer">
+
+            <ImageView
+                android:id="@+id/img_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_attach_money_24dp" />
+
+            <ImageView
+                android:id="@+id/unexpanded"
+                android:visibility="gone"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_expand_less_black_24dp" />
+
+            <RelativeLayout
+                android:id="@+id/info_price"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/best_price_title"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="35dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_black"
+                    android:maxLines="1"
+                    android:text="@string/best_price_title"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/best_price"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/best_price_title"
+                    android:layout_alignStart="@+id/best_price_title"
+                    android:textSize="14sp"
+                    android:text="BRL 231,07" />
+
+                <TextView
+                    android:id="@+id/country_price_title"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/best_price"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="35dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_black"
+                    android:maxLines="1"
+                    android:text="@string/country_price_title"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/country_price"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/country_price_title"
+                    android:layout_alignStart="@+id/country_price_title"
+                    android:textSize="14sp"
+                    android:text="BRL 231,07" />
+
+                <TextView
+                    android:id="@+id/status_title"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/fab_margin"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_black"
+                    android:maxLines="1"
+                    android:text="@string/status_title"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@+id/status_title"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="14sp"
+                    android:text="BRL 231,07" />
+
+                <TextView
+                    android:id="@+id/gold_points_title"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/best_price"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/fab_margin"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_black"
+                    android:maxLines="1"
+                    android:text="@string/gold_points_title"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/gold_points"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/gold_points_title"
+                    android:layout_alignEnd="@+id/gold_points_title"
+                    android:textSize="14sp"
+                    android:text="BRL 231,07" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/list_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/release_date_title"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/release_date"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/release_date_title"
+                android:layout_alignStart="@+id/release_date_title"
+                android:textSize="14sp"
+                tools:text="2019-07-25" />
+
+            <TextView
+                android:id="@+id/demo_available_title"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/release_date"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/demo_available"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/demo_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/demo_available_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:textSize="14sp"
+                tools:text="Não" />
+
+            <TextView
+                android:id="@+id/languages_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/demo_available"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/languages"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/languages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/languages_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="Português, Espanhol, Italiano" />
+
+            <TextView
+                android:id="@+id/categories_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/languages"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/categories_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categories_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="Arcade, Fighting" />
+
+            <TextView
+                android:id="@+id/publisher_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categories"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/publisher_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/publisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/publisher_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="Forever Entertainment S.A." />
+
+            <TextView
+                android:id="@+id/players_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/publisher"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/players_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/players"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/players_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/physical_media_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/players"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/physical_media_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/physical_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/physical_media_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="Não" />
+
+            <TextView
+                android:id="@+id/description_title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/physical_media"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="35dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_black"
+                android:maxLines="1"
+                android:text="@string/description_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description_title"
+                android:layout_alignStart="@+id/demo_available_title"
+                android:layout_marginEnd="35dp"
+                android:textSize="14sp"
+                tools:text="Can you hear it? Can you hear anything? Exactly! Absolute silence is the only law here…" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

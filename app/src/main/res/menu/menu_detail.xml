@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.subsavecoins.savemymoney.activities.DetailActivity">
+    <item android:title="Notificação de desconto"
+        android:orderInCategory="100"
+        android:id="@+id/action_desconto"/>
+    <item android:id="@+id/action_lancamento"
+        android:orderInCategory="100"
+        android:title="Notificação de lançamento"/>
+</menu>

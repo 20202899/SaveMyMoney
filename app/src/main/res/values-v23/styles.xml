@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.Detail" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <!--<item name="colorPrimaryDark">@color/colorAccentDark</item>-->
+        <item name="colorAccent">@color/colorPrimary</item>
+      <item name="fontFamily">@font/concertone_regular</item>
+        <item name="android:windowContentTransitions">true</item>
+        <!--<item name="android:windowEnterTransition">@android:transition/explode</item>-->
+        <!--<item name="android:windowExitTransition">@android:transition/explode</item>-->
+        <item name="android:windowSharedElementEnterTransition">@transition/changebounds_image
+        </item>
+        <item name="android:windowSharedElementExitTransition">@transition/changebounds_image</item>
+    </style>
+
+    <style name="AppTheme.Xbox" parent="Theme.AppCompat.Light.DarkActionBar" >
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@android:color/holo_green_dark</item>
+        <item name="android:windowBackground">@android:color/holo_green_dark</item>
+        <item name="colorPrimaryDark">@android:color/holo_green_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+      <item name="fontFamily">@font/concertone_regular</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:navigationBarColor">@android:color/holo_green_light</item>
+        <!--<item name="android:windowEnterTransition">@android:transition/explode</item>-->
+        <!--<item name="android:windowExitTransition">@android:transition/explode</item>-->
+        <item name="android:windowSharedElementEnterTransition">@transition/changebounds_image</item>
+        <item name="android:windowSharedElementExitTransition">@transition/changebounds_image</item>
+    </style>
+</resources>
