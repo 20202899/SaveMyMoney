@@ -115,10 +115,6 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTree
             }
 
             fab.showByAnim()
-
-            if (!mData?.youtubeId.isNullOrEmpty()) {
-//                initLoadYoutube()
-            }
         }
 
         if (!mData?.youtubeId.isNullOrEmpty()) {
@@ -188,8 +184,7 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTree
         }
 
         youtube_fab.setOnClickListener {
-            youtube_container.visibility = RelativeLayout.VISIBLE
-            initLoadYoutube()
+            startActivity(YouTubeIntents.createPlayVideoIntent(this, mData?.youtubeId))
         }
 
         price_layout.setOnClickListener {
@@ -213,7 +208,6 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTree
             return super.onOptionsItemSelected(item)
 
         if (item.itemId == android.R.id.home) {
-            youtube?.onDestroy()
             youtube_fab.hideByAnim()
             finishAfterTransition()
         }
@@ -235,65 +229,8 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTree
         if (inExpanded) {
             unexpand()
         } else {
-            if (isFullScreen) {
-                mYouTubePlayer?.setFullscreen(false)
-                isFullScreen = false
-            } else {
-                youtube?.onDestroy()
-                super.onBackPressed()
-            }
+            super.onBackPressed()
         }
-    }
-
-    private fun initLoadYoutube() {
-
-        val youtubeFragment = youtube as YouTubePlayerSupportFragment?
-
-        youtubeFragment?.initialize("AIzaSyAfcr0lyY94W5ekpN-M6AgmHBqdW4Tv2Ws",
-                object : YouTubePlayer.OnInitializedListener {
-                    override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?,
-                                                         p2: Boolean) {
-                        mYouTubePlayer = p1
-
-                        if (mData?.youtubeId.isNullOrEmpty()) {
-                            youtube.onDestroy()
-                        } else {
-                            p1?.cueVideo(mData?.youtubeId)
-                        }
-
-                        p1?.setPlaybackEventListener(object : YouTubePlayer.PlaybackEventListener {
-                            override fun onSeekTo(p0: Int) {
-
-                            }
-
-                            override fun onBuffering(p0: Boolean) {
-
-                            }
-
-                            override fun onPlaying() {
-                                if (!isFullScreen)
-                                    p1.setFullscreen(true)
-                            }
-
-                            override fun onStopped() {
-
-                            }
-
-                            override fun onPaused() {
-
-                            }
-
-                        })
-                        p1?.setOnFullscreenListener {
-                            isFullScreen = it
-                        }
-                    }
-
-                    override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
-
-                    }
-
-                })
     }
 
     private fun loadImage() {
