@@ -173,13 +173,21 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, Search
 
     private fun registreDiscountAlarmManager() {
         val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        val componentName = ComponentName(packageName, CustomJobService::class.java.name)
-        val jobinfoBuilder = JobInfo.Builder(1, componentName)
-        jobinfoBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-        jobinfoBuilder.setBackoffCriteria(1800000, JobInfo.BACKOFF_POLICY_LINEAR)
-        jobinfoBuilder.setOverrideDeadline(1800000)
-        jobinfoBuilder.setPersisted(true)
-        jobScheduler.schedule(jobinfoBuilder.build())
 
+        val job = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            jobScheduler.getPendingJob(1)
+        } else {
+            jobScheduler.allPendingJobs.find { it.id == 10 }
+        }
+
+        if (job == null) {
+            val componentName = ComponentName(packageName, CustomJobService::class.java.name)
+            val jobinfoBuilder = JobInfo.Builder(10, componentName)
+            jobinfoBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+            jobinfoBuilder.setBackoffCriteria(1800000, JobInfo.BACKOFF_POLICY_LINEAR)
+            jobinfoBuilder.setOverrideDeadline(1800000)
+            jobinfoBuilder.setPersisted(true)
+            jobScheduler.schedule(jobinfoBuilder.build())
+        }
     }
 }

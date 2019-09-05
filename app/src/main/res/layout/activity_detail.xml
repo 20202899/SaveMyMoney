@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="330dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay.Detail">
 
@@ -25,7 +25,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:toolbarId="@+id/toolbar">
 
-
             <ImageView
                 app:layout_collapseMode="parallax"
                 android:scaleType="fitXY"
@@ -36,7 +35,9 @@
                 android:layout_height="match_parent" />
 
             <RelativeLayout
-                android:visibility="gone"
+                app:layout_collapseMode="parallax"
+                android:layout_marginBottom="16dp"
+                android:visibility="invisible"
                 android:id="@+id/youtube_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -44,19 +45,45 @@
                 <fragment
                     app:layout_collapseMode="parallax"
                     android:id="@+id/youtube"
-                    android:layout_marginBottom="16dp"
                     android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
             </RelativeLayout>
 
+            <ProgressBar
+                android:id="@+id/progress"
+                android:indeterminate="true"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="-8dp"
+                android:layout_gravity="bottom"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/youtube_fab"
+                android:visibility="invisible"
+                app:layout_collapseMode="parallax"
+                android:backgroundTint="@android:color/holo_red_light"
+                app:rippleColor="@android:color/holo_red_dark"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_gravity="bottom|start"
+                android:src="@drawable/ic_play_arrow_white_24dp"
+                android:textColor="@android:color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="@style/AppTheme.PopupOverlay.Detail" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

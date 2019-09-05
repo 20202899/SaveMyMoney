@@ -1,5 +1,9 @@
 package br.com.subsavecoins.savemymoney.activities
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -13,16 +17,20 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import br.com.subsavecoins.savemymoney.R
+import br.com.subsavecoins.savemymoney.extensions.hideByAnim
 import br.com.subsavecoins.savemymoney.extensions.showByAnim
 import br.com.subsavecoins.savemymoney.models.Data
 import br.com.subsavecoins.savemymoney.models.Search
 import br.com.subsavecoins.savemymoney.network.Api
+import br.com.subsavecoins.savemymoney.services.CustomJobService
 import br.com.subsavecoins.savemymoney.utils.ResourseUtils
 import com.android.volley.Response
 import com.google.android.youtube.player.*
@@ -38,11 +46,11 @@ import java.lang.Exception
 import java.lang.StringBuilder
 import java.net.URL
 
-class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
+class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTreeObserver.OnGlobalLayoutListener {
 
-    val mHandler = Handler()
-    val mGson = Gson()
-    var inExpanded = false
+    private val mHandler = Handler()
+    private val mGson = Gson()
+    private var inExpanded = false
 
     override fun onResponse(response: Search?) {
         Log.DEBUG
@@ -92,8 +100,10 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
             country_price.text = mData?.price_info?.country?.name
             gold_points.text = mData?.price_info?.goldPoints.toString()
             status.text = mData?.price_info?.status
-
-            list_info.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fab_appear))
+            progress.visibility = ProgressBar.GONE
+            list_info.startAnimation(AnimationUtils.loadAnimation(this,
+                    android.R.anim.fade_in))
+            list_info.visibility = RelativeLayout.VISIBLE
         }
 
         if (mData?.price_info?.hasDiscount == false) {
@@ -104,13 +114,15 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
                 fab.setImageResource(R.drawable.ic_notifications_none_white_24dp)
             }
 
-            Thread {
-                mHandler.post { fab.showByAnim() }
-            }.start()
+            fab.showByAnim()
 
             if (!mData?.youtubeId.isNullOrEmpty()) {
-                initLoadYoutube()
+//                initLoadYoutube()
             }
+        }
+
+        if (!mData?.youtubeId.isNullOrEmpty()) {
+            youtube_fab.showByAnim()
         }
 
         mInfoLoaderAsyncTask = null
@@ -130,8 +142,20 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         mData = intent.getSerializableExtra("data") as Data
         loadImage()
-//        setTitle()
         initView()
+        initAppbar()
+    }
+
+    override fun onGlobalLayout() {
+        val middle = activity_main.height / 1.6
+        val params = app_bar.layoutParams
+        params.height = middle.toInt()
+        app_bar.layoutParams = params
+        activity_main.viewTreeObserver.removeOnGlobalLayoutListener(this)
+    }
+
+    private fun initAppbar() {
+        activity_main.viewTreeObserver.addOnGlobalLayoutListener(this)
     }
 
     private fun initView() {
@@ -139,19 +163,19 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         window?.decorView?.systemUiVisibility = flags
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            window?.statusBarColor = resources.getColor(R.color.dividerColor);
+            window?.statusBarColor = resources.getColor(R.color.dividerColor)
         } else {
             window?.statusBarColor = resources.getColor(android.R.color.white)
         }
-        app_bar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
-            val isTitleEnabled = i < ((i / 100) * 90) && i <= -200
-            title = if (isTitleEnabled) {
-                mData?.title
-            } else {
-                ""
-            }
-            toolbar_layout.isTitleEnabled = isTitleEnabled
-        })
+//        app_bar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
+//            val isTitleEnabled = i < ((i / 100) * 90) && i <= -200
+//            title = if (isTitleEnabled) {
+               title = ""
+//            } else {
+//                ""
+//            }
+            toolbar_layout.isTitleEnabled = false
+//        })
 
         fab.setOnClickListener {
             if (verifySharedPreferences()) {
@@ -163,6 +187,11 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
             }
         }
 
+        youtube_fab.setOnClickListener {
+            youtube_container.visibility = RelativeLayout.VISIBLE
+            initLoadYoutube()
+        }
+
         price_layout.setOnClickListener {
             expand()
         }
@@ -170,8 +199,6 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         unexpanded.setOnClickListener {
             unexpand()
         }
-
-        //price_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.pulse_animation))
     }
 
 
@@ -187,11 +214,12 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
 
         if (item.itemId == android.R.id.home) {
             youtube?.onDestroy()
+            youtube_fab.hideByAnim()
             finishAfterTransition()
         }
 
         return when {
-            item!!.itemId == R.id.action_desconto -> {
+            item.itemId == R.id.action_desconto -> {
                 super.onOptionsItemSelected(item)
             }
             item.itemId == R.id.action_lancamento -> {
@@ -217,22 +245,9 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         }
     }
 
-    private fun initDescription() {
-//        desicription.text = mData?.description
-    }
-
     private fun initLoadYoutube() {
 
-        youtube_container.visibility = RelativeLayout.VISIBLE
-        youtube_container.startAnimation(AnimationUtils.loadAnimation(this,
-                R.anim.anim_fab_appear))
-
         val youtubeFragment = youtube as YouTubePlayerSupportFragment?
-
-        if (mData?.youtubeId.isNullOrEmpty()) {
-            youtube_container.visibility = View.GONE
-            return
-        }
 
         youtubeFragment?.initialize("AIzaSyAfcr0lyY94W5ekpN-M6AgmHBqdW4Tv2Ws",
                 object : YouTubePlayer.OnInitializedListener {
@@ -307,15 +322,6 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         }
     }
 
-    private fun setTitle() {
-        val sizeTitle = mData!!.title.length
-        if (sizeTitle <= 23) {
-            supportActionBar?.setSubtitle(mData?.title)
-        } else {
-            supportActionBar?.setSubtitle(mData?.title?.subSequence(0, 23))
-        }
-    }
-
     private fun addToAlert(v: Unit) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val discounts = sharedPreferences.getStringSet("discounts", mutableSetOf())
@@ -346,7 +352,7 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
 
         val changeBounds = ChangeBounds()
         changeBounds.duration = 600
-        changeBounds.interpolator = OvershootInterpolator()
+        changeBounds.interpolator = AccelerateDecelerateInterpolator()
 
         changeBounds.addListener(object : Transition.TransitionListener {
             override fun onTransitionEnd(p0: Transition) {
@@ -404,7 +410,7 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?> {
         val paramsListInfo = list_info.layoutParams as FrameLayout.LayoutParams
         val size = ResourseUtils.dpToPx(50f, this@DetailActivity).toInt()
         changeBounds.duration = 450
-        changeBounds.interpolator = OvershootInterpolator()
+        changeBounds.interpolator = AccelerateDecelerateInterpolator()
 
         changeBounds.addListener(object : Transition.TransitionListener {
             override fun onTransitionEnd(p0: Transition) {

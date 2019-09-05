@@ -32,30 +32,43 @@ class CustomJobService : JobService() {
     }
 
     private val loader = @SuppressLint("StaticFieldLeak")
-    object : AsyncTask<String, MutableList<Search>, MutableList<Search>>() {
+    object : AsyncTask<String, Search?, MutableList<Search>>() {
         override fun doInBackground(vararg p0: String?): MutableList<Search>? {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
-            val discounts = sharedPreferences.getStringSet("discounts", mutableSetOf()).iterator()
+            val discounts = sharedPreferences.getStringSet("discounts", mutableSetOf())
+            if (discounts.size == 0) {
+                jobFinished(mJobParameters, false)
+                return null
+            }
+            val values = discounts.iterator()
             val gson = Gson()
             val list = mutableListOf<Search>()
-            while (discounts.hasNext()) {
-                val d = discounts.next()
+            while (values.hasNext()) {
+                val d = values.next()
                 val url = URL(Api.getUrl(Api.ApiSelection.OPEN_GAME, d))
                 val openConnection = url.openConnection()
                 try {
                     val stream = openConnection.getInputStream()
                     list.add(gson.fromJson(String(stream.readBytes()), Search::class.java))
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
 
                 Thread.sleep(3000)
             }
+
+            list.forEach {
+                if (it.data.price_info?.hasDiscount == true) {
+                    publishProgress(it)
+                }
+            }
+
             return list
         }
 
-        override fun onPostExecute(result: MutableList<Search>?) {
-            super.onPostExecute(result)
-            sendNotification(result)
+        override fun onProgressUpdate(vararg values: Search?) {
+            super.onProgressUpdate(*values)
+            sendNotification(values[0])
             jobFinished(mJobParameters, true)
         }
     }
@@ -66,7 +79,7 @@ class CustomJobService : JobService() {
         return true
     }
 
-    private fun sendNotification(notifications: MutableList<Search>?) {
+    private fun sendNotification(notification: Search?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             var notificationChannel = notificationManager.getNotificationChannel("SubSaveCoinsJob")
             if (notificationChannel == null) {
@@ -78,22 +91,17 @@ class CustomJobService : JobService() {
             }
         }
 
-        notifications?.forEach {
-
-            if (it.data.price_info?.hasDiscount == true) {
-                val notification = NotificationCompat.Builder(baseContext, "SubSaveCoinsJob")
-                notification.setContentTitle(it.data?.title)
-                notification.setContentText("De ${it.data?.price_info?.regularPrice?.regularPrice} por ${it.data?.price_info?.discountPrice?.discountPrice}")
-                notification.priority = NotificationCompat.PRIORITY_MAX
-                notification.setSmallIcon(R.drawable.ic_notifications_active_white_24dp)
-                notificationManager.notify(if (it.data.id == -1) {
-                    it.data.newId.toInt()
-                } else {
-                    it.data.id
-                }, notification.build())
-            }
-
-            Thread.sleep(3000)
+        notification?.let {
+            val n = NotificationCompat.Builder(baseContext, "SubSaveCoinsJob")
+            n.setContentTitle(it.data?.title)
+            n.setContentText("De ${it.data?.price_info?.regularPrice?.regularPrice} por ${it.data?.price_info?.discountPrice?.discountPrice}")
+            n.priority = NotificationCompat.PRIORITY_MAX
+            n.setSmallIcon(R.drawable.ic_notifications_active_white_24dp)
+            notificationManager.notify(if (it.data.id == -1) {
+                it.data.newId.toInt()
+            } else {
+                it.data.id
+            }, n.build())
         }
     }
 }

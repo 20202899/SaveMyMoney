@@ -153,6 +153,7 @@
 
         <RelativeLayout
             android:id="@+id/list_info"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -345,6 +346,22 @@
                 android:layout_marginEnd="35dp"
                 android:textSize="14sp"
                 tools:text="Can you hear it? Can you hear anything? Exactly! Absolute silence is the only law here…" />
+
+<!--            <android.support.design.widget.FloatingActionButton-->
+<!--                android:id="@+id/youtube_button"-->
+<!--                android:backgroundTint="@android:color/holo_red_light"-->
+<!--                app:rippleColor="@android:color/holo_red_dark"-->
+<!--                app:borderWidth="0dp"-->
+<!--                android:layout_marginTop="50dp"-->
+<!--                android:layout_marginStart="@dimen/fab_margin"-->
+<!--                android:layout_marginBottom="@dimen/fab_margin"-->
+<!--                android:layout_marginEnd="@dimen/fab_margin"-->
+<!--                android:src="@drawable/ic_play_arrow_white_24dp"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_below="@+id/description"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
 
         </RelativeLayout>
 
