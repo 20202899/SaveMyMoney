@@ -48,7 +48,7 @@
             app:tabIndicatorColor="@color/dividerColor"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/darker_gray"
-            app:tabTextColor="@color/dividerColor" />
+            app:tabTextColor="@null" />
 
     </android.support.design.widget.AppBarLayout>
 
