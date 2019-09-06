@@ -136,7 +136,7 @@ class DetailActivity : AppCompatActivity(), Response.Listener<Search?>, ViewTree
         setSupportActionBar(toolbar)
         supportPostponeEnterTransition()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        mData = intent.getSerializableExtra("data") as Data
+        mData = intent.getParcelableExtra("data")
         loadImage()
         initView()
         initAppbar()

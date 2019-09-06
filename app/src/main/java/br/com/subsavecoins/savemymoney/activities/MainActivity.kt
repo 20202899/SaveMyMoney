@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -19,10 +20,12 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import br.com.subsavecoins.savemymoney.R
 import br.com.subsavecoins.savemymoney.adapters.CustomFragmentPageAdapter
+import br.com.subsavecoins.savemymoney.adapters.GameAdapter
 import br.com.subsavecoins.savemymoney.extensions.hideByAnim
 import br.com.subsavecoins.savemymoney.extensions.showByAnim
 import br.com.subsavecoins.savemymoney.fragments.ContentFragment
 import br.com.subsavecoins.savemymoney.fragments.SpotlightFragment
+import br.com.subsavecoins.savemymoney.models.Data
 import br.com.subsavecoins.savemymoney.models.GamedataModel
 import br.com.subsavecoins.savemymoney.network.Api
 import br.com.subsavecoins.savemymoney.network.GameLoadAsyncTask
@@ -66,18 +69,27 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, Search
     private val customFragmentPageAdapter = CustomFragmentPageAdapter(supportFragmentManager)
 
     private lateinit var mSearchView: SearchView
-
-    var mGameLoadAsyncTask: GameLoadAsyncTask? = null
+    private val mHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         setupAppbarAnimation()
-        setTitle("")
+        title = ""
         showPlatform()
         initViews()
+        initNotify()
         registreDiscountAlarmManager()
+    }
+
+    private fun initNotify() {
+        val data = intent.getParcelableExtra<Data>("notify")
+        if (data != null) {
+            mHandler.postDelayed({startActivity(Intent(this, DetailActivity::class.java).apply {
+                putExtra("data", data)
+            })}, 600)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -184,10 +196,21 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, Search
             val componentName = ComponentName(packageName, CustomJobService::class.java.name)
             val jobinfoBuilder = JobInfo.Builder(10, componentName)
             jobinfoBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-            jobinfoBuilder.setBackoffCriteria(1800000, JobInfo.BACKOFF_POLICY_LINEAR)
+//            jobinfoBuilder.setBackoffCriteria(1800000, JobInfo.BACKOFF_POLICY_LINEAR)
             jobinfoBuilder.setOverrideDeadline(1800000)
+            jobinfoBuilder.setMinimumLatency(1800000)
+            jobinfoBuilder.setRequiresBatteryNotLow(true)
             jobinfoBuilder.setPersisted(true)
             jobScheduler.schedule(jobinfoBuilder.build())
+        }
+    }
+
+    override fun onBackPressed() {
+
+        if (viewPager.currentItem == ContentFragment.CONTENT_TYPE) {
+            viewPager.currentItem = SpotlightFragment.SPOTLIGHT_TYPE
+        }else {
+            super.onBackPressed()
         }
     }
 }

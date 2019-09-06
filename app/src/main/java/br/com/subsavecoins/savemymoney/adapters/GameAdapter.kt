@@ -135,7 +135,7 @@ class GameAdapter(var context: AppCompatActivity) : RecyclerView.Adapter<GameAda
                 val pair = Pair.create(image as View, context.getString(R.string.transition_image))
 //                val pair1 = Pair.create(title as View, context.getString(R.string.transition_text))
                 val bundle = Bundle()
-                bundle.putSerializable("data", models!![adapterPosition])
+                bundle.putParcelable("data", models!![adapterPosition])
                 intent.putExtras(bundle)
                 context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(context,
                         pair).toBundle())

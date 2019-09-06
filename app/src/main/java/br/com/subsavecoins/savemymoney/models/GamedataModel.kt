@@ -2,6 +2,8 @@ package br.com.subsavecoins.savemymoney.models
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import java.io.Serializable
 
 /**
@@ -43,7 +45,7 @@ class Filters: Serializable {
     }
 }
 
-open class Data: Serializable {
+open class Data() : Parcelable {
     var id = -1
     var newId: Long = -1
     var slug = ""
@@ -63,6 +65,23 @@ open class Data: Serializable {
     var languages = mutableListOf<Language>()
     var numberOfPlayers = ""
     var retailRelease = false
+
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readInt()
+        newId = parcel.readLong()
+        slug = parcel.readString()
+        url = parcel.readString()
+        title = parcel.readString()
+        imageUrl = parcel.readString()
+        releaseDateDisplay = parcel.readString()
+        releaseDateOrde = parcel.readString()
+        youtubeId = parcel.readString()
+        description = parcel.readString()
+        hasDemo = parcel.readByte() != 0.toByte()
+        numberOfPlayers = parcel.readString()
+        retailRelease = parcel.readByte() != 0.toByte()
+    }
+
     init {
         newId = hashCode().toLong()
     }
@@ -77,6 +96,36 @@ open class Data: Serializable {
     class Language{
         var region = ""
         var languages = mutableListOf<Filters.Language>()
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeLong(newId)
+        parcel.writeString(slug)
+        parcel.writeString(url)
+        parcel.writeString(title)
+        parcel.writeString(imageUrl)
+        parcel.writeString(releaseDateDisplay)
+        parcel.writeString(releaseDateOrde)
+        parcel.writeString(youtubeId)
+        parcel.writeString(description)
+        parcel.writeByte(if (hasDemo) 1 else 0)
+        parcel.writeString(numberOfPlayers)
+        parcel.writeByte(if (retailRelease) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Data> {
+        override fun createFromParcel(parcel: Parcel): Data {
+            return Data(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Data?> {
+            return arrayOfNulls(size)
+        }
     }
 }
 

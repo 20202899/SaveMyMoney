@@ -78,8 +78,7 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition) {
-            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
-            viewToAnimate.startAnimation(animation)
+            viewToAnimate.startAnimation(AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left))
             lastPosition = position
         }
     }
@@ -103,7 +102,7 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val pair = Pair.create(image as View, it.context.getString(R.string.transition_image))
 //                val pair1 = Pair.create(title as View, context.getString(R.string.transition_text))
                 val bundle = Bundle()
-                bundle.putSerializable("data", models)
+                bundle.putParcelable("data", models)
                 intent.putExtras(bundle)
                 it.context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity,
                         pair).toBundle())
