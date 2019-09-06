@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.util.Pair
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import br.com.subsavecoins.savemymoney.activities.DetailActivity
 import br.com.subsavecoins.savemymoney.activities.MainActivity
+import br.com.subsavecoins.savemymoney.activities.MoreActivity
+import br.com.subsavecoins.savemymoney.views.HeaderItem
 
 
 class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -29,8 +32,10 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val item = mData[p1]
 
         return if (item is String) {
-            MyViewHolderHeader(LayoutInflater.from(p0.context)
-                    .inflate(R.layout.header_spotlight, p0, false))
+            MyViewHolderHeader(HeaderItem(p0.context).apply {
+                type =
+            })
+
         } else {
             MyViewHolderItem(LayoutInflater.from(p0.context)
                     .inflate(R.layout.item_spotlight, p0, false))
@@ -40,21 +45,20 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         if (p0 is MyViewHolderItem) {
             val item = mData[p1] as Data
-//            p0.title.text = item.title
-//            picasso?.load(item.imageUrl)
-//                    ?.resize(90, 90)
-//                    ?.centerCrop()
-//                    ?.into(p0.image)
             setProperties(item, p0)
         } else if (p0 is MyViewHolderHeader) {
             val item = mData[p1] as String
             p0.textView.text = item
+            p0.setIsRecyclable(false)
 
         }
 
         setAnimation(p0.itemView, p1)
     }
 
+    private val mTypes = mutableListOf<Int>(MoreActivity.ON_SALE_TYPE,
+            MoreActivity.RECENT_RELEACE_TYPE, MoreActivity.COMING_SOON_TYPE,
+            MoreActivity.PRE_SALE_TYPE)
     private var mData = mutableListOf<Any>()
     private var picasso: Picasso? = null
     private var lastPosition = -1
@@ -85,6 +89,14 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class MyViewHolderHeader(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView = itemView.findViewById<TextView>(R.id.text1)
+        val more = itemView.findViewById<TextView>(R.id.more)
+
+        init {
+            more.setOnClickListener {
+                val intent = Intent(itemView.context, MoreActivity::class.java)
+                itemView.context.startActivity(intent)
+            }
+        }
     }
 
     inner class MyViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -112,4 +112,5 @@
     <string name="country_price_title">País</string>
     <string name="status_title">Status</string>
     <string name="gold_points_title">Pontos de Ouro</string>
+    <string name="activity_more">Mais</string>
 </resources>
