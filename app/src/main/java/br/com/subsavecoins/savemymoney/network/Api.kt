@@ -29,29 +29,14 @@ class Api {
             } else {
                 platfom
             }
-            val onSale = "games?currency=USD&locale=pt&filter[${if (platfom.isEmpty()) {
-                "nintendo"
-            } else {
-                platfom
-            }}]=nintendo&filter[on_sale]=true"
+            val onSale = "https://api-savecoins.nznweb.com.br/v1/games?currency=USD&locale=pt&filter[platform]=nintendo&filter[on_sale]=true"
 
-            val recentRelease = "games?currency=USD&locale=pt&filter[${if (platfom.isEmpty()) {
-                "nintendo"
-            } else {
-                platfom
-            }}]=nintendo&filter[recent_release]=true"
+            val recentRelease = "https://api-savecoins.nznweb.com.br/v1/games?currency=USD&locale=pt&filter[platform]=nintendo&filter[recent_release]=true"
 
-            val comingSoon = "games?currency=USD&locale=pt&filter[${if (platfom.isEmpty()) {
-                "nintendo"
-            } else {
-                platfom
-            }}]=nintendo&filter[coming_soon]=true"
+            val comingSoon = "https://api-savecoins.nznweb.com.br/v1/games?currency=USD&locale=pt&filter[platform]=nintendo&filter[coming_soon]=true"
 
-            val preSale = "games?currency=USD&locale=pt&filter[${if (platfom.isEmpty()) {
-                "nintendo"
-            } else {
-                platfom
-            }}]=nintendo&filter[preorder]=true"
+            val preSale = "https://api-savecoins.nznweb.com.br/v1/games?currency=USD&locale=pt&filter[platform]=nintendo&filter[preorder]=true"
+
             return when (selection) {
                 ApiSelection.CURRENCIES -> {
                     String.format(url, currencies)
@@ -69,16 +54,16 @@ class Api {
                     String.format(url, search)
                 }
                 ApiSelection.ON_SALE -> {
-                    String.format(url, onSale)
+                    onSale
                 }
                 ApiSelection.RECENT_RELEACE -> {
-                    String.format(url, recentRelease)
+                    recentRelease
                 }
                 ApiSelection.COMING_SOON -> {
-                    String.format(url, comingSoon)
+                    comingSoon
                 }
                 ApiSelection.PRE_SALE -> {
-                    String.format(url, preSale)
+                    preSale
                 }
             }
         }

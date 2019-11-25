@@ -8,8 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="fontFamily">@font/concertone_regular</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <!--<item name="android:windowEnterTransition">@android:transition/explode</item>-->
-        <!--<item name="android:windowExitTransition">@android:transition/explode</item>-->
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
         <item name="android:windowSharedElementEnterTransition">@transition/changebounds_image</item>
         <item name="android:windowSharedElementExitTransition">@transition/changebounds_image</item>
         <item name="android:navigationBarColor">@color/dividerColor</item>

@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Pair
 import android.util.SparseArray
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout
 import br.com.subsavecoins.savemymoney.activities.DetailActivity
 import br.com.subsavecoins.savemymoney.activities.MainActivity
 import br.com.subsavecoins.savemymoney.activities.MoreActivity
+import br.com.subsavecoins.savemymoney.network.Api
 import br.com.subsavecoins.savemymoney.views.HeaderItem
 
 
@@ -33,8 +35,12 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         return if (item is String) {
             MyViewHolderHeader(HeaderItem(p0.context).apply {
-                type =
-            })
+                if (mTypes.hasNext()) {
+                    type = mTypes.next()
+                }
+            }).apply {
+                setIsRecyclable(false)
+            }
 
         } else {
             MyViewHolderItem(LayoutInflater.from(p0.context)
@@ -49,8 +55,6 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         } else if (p0 is MyViewHolderHeader) {
             val item = mData[p1] as String
             p0.textView.text = item
-            p0.setIsRecyclable(false)
-
         }
 
         setAnimation(p0.itemView, p1)
@@ -58,11 +62,15 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mTypes = mutableListOf<Int>(MoreActivity.ON_SALE_TYPE,
             MoreActivity.RECENT_RELEACE_TYPE, MoreActivity.COMING_SOON_TYPE,
-            MoreActivity.PRE_SALE_TYPE)
+            MoreActivity.PRE_SALE_TYPE).iterator()
+
+    val headers = mutableListOf<String>("Em Promoção", "Recém-lançados", "Em Breve",
+            "Pré-venda")
+
     private var mData = mutableListOf<Any>()
     private var picasso: Picasso? = null
     private var lastPosition = -1
-    lateinit var activity: MainActivity
+    lateinit var activity: AppCompatActivity
     override fun getItemCount() = mData.size
 
     override fun getItemViewType(position: Int): Int {
@@ -87,14 +95,52 @@ class SpotlightAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class MyViewHolderHeader(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolderHeader(itemView: HeaderItem) : RecyclerView.ViewHolder(itemView) {
         val textView = itemView.findViewById<TextView>(R.id.text1)
         val more = itemView.findViewById<TextView>(R.id.more)
 
         init {
-            more.setOnClickListener {
+            itemView.setOnClickListener {
+                val item = mData[adapterPosition]
                 val intent = Intent(itemView.context, MoreActivity::class.java)
-                itemView.context.startActivity(intent)
+
+                if (item is String) {
+                    val url = when (headers.indexOf(item)) {
+                        MoreActivity.ON_SALE_TYPE -> {
+                            Api.getUrl(Api.ApiSelection.ON_SALE)
+                        }
+                        MoreActivity.COMING_SOON_TYPE -> {
+                            Api.getUrl(Api.ApiSelection.ON_SALE)
+                        }
+                        MoreActivity.PRE_SALE_TYPE -> {
+                            Api.getUrl(Api.ApiSelection.PRE_SALE)
+                        }
+                        else -> {
+                            Api.getUrl(Api.ApiSelection.RECENT_RELEACE)
+                        }
+                    }
+
+                    val type = when (headers.indexOf(item)) {
+                        MoreActivity.ON_SALE_TYPE -> {
+                            MoreActivity.ON_SALE_TYPE
+                        }
+                        MoreActivity.COMING_SOON_TYPE -> {
+                            MoreActivity.COMING_SOON_TYPE
+                        }
+                        MoreActivity.PRE_SALE_TYPE -> {
+                            MoreActivity.PRE_SALE_TYPE
+                        }
+                        else -> {
+                            MoreActivity.RECENT_RELEACE_TYPE
+                        }
+                    }
+
+                    intent.putExtra("url", url)
+                    intent.putExtra("type", type)
+                    val acitivtyOptions = ActivityOptions.makeSceneTransitionAnimation(activity)
+
+                    itemView.context.startActivity(intent, acitivtyOptions.toBundle())
+                }
             }
         }
     }

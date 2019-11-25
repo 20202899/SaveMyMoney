@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -59,8 +60,8 @@ class SpotlightFragment : Fragment(), SpotlightLoadCallback {
         recyclerview.setHasFixedSize(true)
         recyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
                 false)
-//        recyclerview.addItemDecoration(DividerItemDecoration(context,
-//                DividerItemDecoration.VERTICAL))
+        recyclerview.addItemDecoration(DividerItemDecoration(context,
+                DividerItemDecoration.VERTICAL))
 
         recyclerview.adapter = mAdaper
 
